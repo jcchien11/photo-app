@@ -33,6 +33,13 @@
 - [ ] Mobile nav — bottom tab bar on mobile
 - [ ] Empty state illustrations
 
+## Backend (In Progress)
+- [ ] Connect Supabase — MCP server configured, authentication pending
+- [ ] Migrate albums + photos from localStorage to Supabase DB
+- [ ] Replace mock data with real DB queries
+- [ ] File storage for uploaded photos (Supabase Storage)
+- [ ] Auth (user login / sessions)
+
 ## Tech Stack Reference
 - Next.js 14 (App Router) — frontend only for now
 - Tailwind CSS + shadcn UI primitives (Radix UI)

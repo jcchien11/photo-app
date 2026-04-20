@@ -78,9 +78,9 @@ export function CreateAlbumDialog({
     setTags(tags.filter((t) => t !== tag));
   };
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     if (!title.trim()) return;
-    const album = createAlbum({
+    const album = await createAlbum({
       title: title.trim(),
       description: description.trim(),
       coverPhoto: selectedCover,

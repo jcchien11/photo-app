@@ -111,7 +111,7 @@ export function Navbar({ onSearch, searchVisible = false }: NavbarProps) {
             </div>
 
             {/* User avatar (mock) */}
-            <button className="h-8 w-8 rounded-full bg-warm-400 flex items-center justify-center text-white text-xs font-sans tracking-wide hover:bg-warm-500 transition-colors">
+            <button className="h-8 w-8 rounded-full bg-warm-700 flex items-center justify-center text-white text-xs font-sans tracking-wide hover:bg-warm-800 transition-colors">
               JC
             </button>
 

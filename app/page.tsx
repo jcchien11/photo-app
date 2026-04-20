@@ -75,7 +75,7 @@ export default function DashboardPage() {
         {/* Page header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
           <div>
-            <h1 className="font-sans text-4xl lg:text-5xl leading-tight" style={{color: '#003366'}}>
+            <h1 className="font-sans text-5xl lg:text-5xl leading-tight" style={{color: '#003366'}}>
               My Albums
             </h1>
             <p className="text-sm font-sans text-neutral-400 tracking-widest uppercase mt-2">
