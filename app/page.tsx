@@ -84,7 +84,7 @@ export default function DashboardPage() {
           </div>
           <Button
             onClick={() => setCreateOpen(true)}
-            className="self-start sm:self-auto shrink-0 bg-orange-500 hover:bg-orange-600"
+            className="self-start sm:self-auto shrink-0 bg-green-500 hover:bg-green-600"
           >
             <Plus className="h-4 w-4" />
             New Album
@@ -189,7 +189,7 @@ export default function DashboardPage() {
                 <p className="text-sm font-sans text-neutral-400 mt-1">
                   Create your first album to get started
                 </p>
-                <Button className="mt-6 bg-orange-500 hover:bg-orange-600" onClick={() => setCreateOpen(true)}>
+                <Button className="mt-6 bg-green-500 hover:bg-green-600" onClick={() => setCreateOpen(true)}>
                   <Plus className="h-4 w-4" />
                   New Album
                 </Button>
