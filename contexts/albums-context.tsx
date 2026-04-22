@@ -78,6 +78,7 @@ interface AlbumsContextType {
   deleteAlbum: (id: string) => Promise<void>;
   addPhotosToAlbum: (albumId: string, photos: Photo[]) => Promise<void>;
   removePhotoFromAlbum: (albumId: string, photoId: string) => Promise<void>;
+  duplicatePhotosInAlbum: (albumId: string, photoIds: string[]) => Promise<void>;
   toggleFavorite: (albumId: string, photoId: string) => Promise<void>;
   setCoverPhoto: (albumId: string, photoUrl: string) => Promise<void>;
 }
@@ -217,6 +218,65 @@ export function AlbumsProvider({ children }: { children: ReactNode }) {
     [albums]
   );
 
+  const duplicatePhotosInAlbum = useCallback(
+    async (albumId: string, photoIds: string[]) => {
+      const album = albums.find((a) => a.id === albumId);
+      if (!album) return;
+
+      const selectedSet = new Set(photoIds);
+      const newPhotos: Photo[] = [];
+      const newOrder: Photo[] = [];
+
+      for (const photo of album.photos) {
+        newOrder.push(photo);
+        if (selectedSet.has(photo.id)) {
+          const duplicate: Photo = {
+            ...photo,
+            id: `photo-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+          };
+          newOrder.push(duplicate);
+          newPhotos.push(duplicate);
+        }
+      }
+
+      const insertRows = newPhotos.map((p) => {
+        const idx = newOrder.findIndex((x) => x.id === p.id);
+        return {
+          id: p.id,
+          album_id: albumId,
+          url: p.url,
+          width: p.width,
+          height: p.height,
+          aspect_ratio: p.aspectRatio,
+          tags: p.tags,
+          location: p.location ?? null,
+          date: p.date,
+          favorite: p.favorite,
+          exif_location: p.exifLocation ?? null,
+          sort_order: idx,
+        };
+      });
+
+      await supabase.from("photos").insert(insertRows);
+
+      // Update sort_order for existing photos whose positions shifted
+      await Promise.all(
+        newOrder.map((p, idx) => {
+          const originalIdx = album.photos.findIndex((x) => x.id === p.id);
+          if (originalIdx !== -1 && originalIdx !== idx) {
+            return supabase.from("photos").update({ sort_order: idx }).eq("id", p.id);
+          }
+          return Promise.resolve();
+        })
+      );
+
+      setAlbums((prev) =>
+        prev.map((a) => (a.id === albumId ? { ...a, photos: newOrder } : a))
+      );
+    },
+    [albums]
+  );
+
   const removePhotoFromAlbum = useCallback(
     async (albumId: string, photoId: string) => {
       await supabase.from("photos").delete().eq("id", photoId);
@@ -280,6 +340,7 @@ export function AlbumsProvider({ children }: { children: ReactNode }) {
         deleteAlbum,
         addPhotosToAlbum,
         removePhotoFromAlbum,
+        duplicatePhotosInAlbum,
         toggleFavorite,
         setCoverPhoto,
       }}

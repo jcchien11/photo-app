@@ -15,6 +15,7 @@ import {
   X,
   Check,
   Filter,
+  Copy,
 } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 import { AddPhotosDialog } from "@/components/add-photos-dialog";
@@ -35,7 +36,7 @@ export default function AlbumPage() {
   const params = useParams();
   const router = useRouter();
   const albumId = params.id as string;
-  const { getAlbum, toggleFavorite, setCoverPhoto, removePhotoFromAlbum } = useAlbums();
+  const { getAlbum, toggleFavorite, setCoverPhoto, removePhotoFromAlbum, duplicatePhotosInAlbum } = useAlbums();
 
   const album = getAlbum(albumId);
 
@@ -81,6 +82,12 @@ export default function AlbumPage() {
 
   const deleteSelected = () => {
     selectedPhotos.forEach((id) => removePhotoFromAlbum(albumId, id));
+    setSelectedPhotos(new Set());
+    setSelectMode(false);
+  };
+
+  const duplicateSelected = async () => {
+    await duplicatePhotosInAlbum(albumId, Array.from(selectedPhotos));
     setSelectedPhotos(new Set());
     setSelectMode(false);
   };
@@ -172,6 +179,15 @@ export default function AlbumPage() {
                   <span className="text-xs font-sans text-neutral-500 mr-1">
                     {selectedPhotos.size} selected
                   </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={duplicateSelected}
+                    disabled={selectedPhotos.size === 0}
+                  >
+                    <Copy className="h-3.5 w-3.5" />
+                    <span className="hidden sm:inline">Duplicate</span>
+                  </Button>
                   <Button
                     variant="outline"
                     size="sm"
